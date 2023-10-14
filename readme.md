@@ -1,60 +1,14 @@
 # MoneyPitAPI
 
-## Usage
+## What's different from Vault?
 
-### Implementing in bukkit plugin wanting to use economy
+MoneyPitAPI allows economy plugins to implement economy handling methods that fully support async operations. This
+means economy plugin developers can easily handle database operations without having to worry about blocking the main
+server thread. This, being an overall benefit to performance and lessening the amount of data needing to be cached and
+less burden on handling cases like player being offline, comes with a disadvantage of being more difficult to manage.
+Developers are advised to excerise caution when implementing this api, in both economy provider and user plugins.
+Basic knowledge about concurrency and its pitfalls is required to use this api.``****
 
-```java
-public final class YourPlugin extends JavaPlugin {
+## How to use
 
-    @Override
-    public void onEnable() {
-        RegisteredServiceProvider<Economy> provider = getServer()
-                .getServicesManager()
-                .getRegistration(Economy.class);
-
-        if (provider == null) {
-            getLogger().severe("No economy provider found!");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
-        Economy economy = provider.getProvider();
-        if (!economy.isEnabled()) {
-            getLogger().severe("Economy provider is not enabled!");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
-        economy.has(getServer().getOfflinePlayer("YouHaveTrouble").getUniqueId(), 1000000).thenAccept(has -> {
-            if (has) {
-                getLogger().info("YouHaveTrouble is a millionaire!");
-            } else {
-                getLogger().info("YouHaveTrouble is not a millionaire :(");
-            }
-        });
-    }
-}
-```
-
-### implementing in bukkit economy plugin
-
-```java
-public final class YourPlugin extends JavaPlugin {
-
-    @Override
-    public void onEnable() {
-        // your implementation of Economy class
-        Economy economyImplementation = new EconomyImplementation(); 
-
-        Bukkit.getServer()
-                .getServicesManager()
-                .register(
-                        Economy.class,
-                        economyImplementation,
-                        this,
-                        ServicePriority.Highest
-                );
-    }
-}
-```
+[See the wiki](https://github.com/YouHaveTrouble/MoneyPitAPI/wiki)
