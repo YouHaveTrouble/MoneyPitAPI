@@ -1,5 +1,8 @@
 package me.youhavetrouble.moneypit;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,7 +35,7 @@ public interface Economy {
      * @param id UUID
      * @return CompletableFuture of the balance
      */
-    CompletableFuture<Long> getBalance(UUID id);
+    CompletableFuture<Long> getBalance(@NotNull UUID id);
 
     /**
      * Deposit money into a player's account. Negative amounts should be clamped to 0.
@@ -40,7 +43,7 @@ public interface Economy {
      * @param amount amount to deposit
      * @return CompletableFuture of the response
      */
-    CompletableFuture<EconomyResponse> deposit(UUID id, long amount);
+    CompletableFuture<EconomyResponse> deposit(@NotNull UUID id, long amount);
 
     /**
      * Withdraw money from a player's account. Negative amounts should be clamped to 0.
@@ -48,7 +51,15 @@ public interface Economy {
      * @param amount amount to withdraw
      * @return CompletableFuture of the response
      */
-    CompletableFuture<EconomyResponse> withdraw(UUID id, long amount);
+    CompletableFuture<EconomyResponse> withdraw(@NotNull UUID id, long amount);
+
+    /**
+     * Set the balance of a player's account. Negative amounts should be clamped to 0.
+     * @param id UUID
+     * @param amount amount to set
+     * @return CompletableFuture of the response
+     */
+    CompletableFuture<EconomyResponse> setBalance(@NotNull UUID id, long amount);
 
     /**
      * Check if a player has at least a certain amount of money
@@ -56,6 +67,24 @@ public interface Economy {
      * @param amount amount to check
      * @return CompletableFuture of the response
      */
-    CompletableFuture<Boolean> has(UUID id, long amount);
+    CompletableFuture<Boolean> has(@NotNull UUID id, long amount);
+
+
+    /**
+     * Returns a list of the top balances with an optional page number
+     * @param page page number
+     * @param size size of the page
+     * @throws NotImplementedException if the economy plugin does not support this feature
+     * @return CompletableFuture of the list of top balances
+     */
+    CompletableFuture<List<BaltopEntry>> getBaltop(int page, int size) throws NotImplementedException;
+
+    /**
+     * Returns a list of the top balances
+     * @param size size of the page
+     * @throws NotImplementedException if the economy plugin does not support this feature
+     * @return CompletableFuture of the list of top balances
+     */
+    CompletableFuture<List<BaltopEntry>> getBaltop(int size) throws NotImplementedException;
 
 }
